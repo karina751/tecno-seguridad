@@ -1,12 +1,5 @@
 /* src/index.css */
 
-/*
- * @description Estilos globales para la raíz del documento.
- * Aseguran que los elementos html, body y el contenedor #root
- * ocupen el 100% de la altura del viewport. Esto es fundamental para
- * que el diseño flexbox de la aplicación funcione correctamente
- * y el footer se mantenga al final de la página.
- */
 html,
 body,
 #root {

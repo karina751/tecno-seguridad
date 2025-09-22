@@ -1,45 +1,52 @@
 /* src/App.css */
 
 :root {
-  --color-principal: #0a400a; /* Verde oscuro */
-  --color-secundario: #f0f0f0; /* Gris muy claro */
+  --color-principal: #0d47a1; /* Azul oscuro */
+  --color-secundario: #e3f2fd; /* Azul muy claro */
+  --color-degradado-inicio: #0d47a1; /* Azul oscuro para degradado */
+  --color-degradado-fin: #42a5f5; /* Azul claro para degradado */
+  --color-texto-claro: #ffffff;
+  --color-texto-oscuro: #000000;
 }
 
-/**
- * @description Estilos globales para el cuerpo del documento HTML.
- * El resto de estilos son gestionados por Bootstrap y los componentes.
- */
 body {
   background-color: var(--color-secundario);
   color: var(--color-principal);
   font-family: Arial, sans-serif;
 }
 
-/**
- * @description Contenedor principal de la aplicación.
- * Utiliza flexbox para que la página ocupe toda la altura de la ventana
- * y el footer siempre se sitúe al final.
- */
 .App {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/**
- * @description El contenedor principal de las rutas ocupa el espacio restante.
- * flex-grow: 1 permite que el main se expanda y empuje al footer.
- */
 .contenido-principal {
   flex-grow: 1;
 }
 
-.text-success {
-  color: var(--color-principal) !important;
+.bg-degradado-ondas {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none"><path fill="url(%23linear-gradient)" fill-opacity="1" d="M0,160L48,160C96,160,192,160,288,181.3C384,203,480,245,576,240C672,235,768,181,864,170.7C960,160,1056,192,1152,192C1248,192,1344,160,1392,144L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path><defs><linearGradient id="linear-gradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="%230d47a1"/><stop offset="100%" stop-color="%2342a5f5"/></linearGradient></defs></svg>');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-color: var(--color-degradado-inicio);
 }
 
-.bg-dark {
-  background-color: var(--color-principal) !important;
+.logo-main {
+  height: 50px;
+}
+
+.footer-whatsapp-logo {
+  height: 30px;
+}
+
+.text-white {
+  color: var(--color-texto-claro) !important;
+}
+
+.text-success {
+  color: var(--color-principal) !important;
 }
 
 .nav-link.active {
