@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Ignorar archivos de claves y variables de entorno
+.env.local
+.env
