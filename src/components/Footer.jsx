@@ -5,7 +5,7 @@ import { Container } from 'react-bootstrap';
  * Contiene información de la empresa y un enlace de contacto a WhatsApp.
  */
 function Footer() {
-  const numeroTelefono = '5493874123456';
+  const numeroTelefono = '5493875222620';
   const mensaje = 'Hola TecnoSeguridad, me gustaría consultar sobre sus servicios.';
   const linkWhatsApp = `https://api.whatsapp.com/send?phone=${numeroTelefono}&text=${encodeURIComponent(mensaje)}`;
 

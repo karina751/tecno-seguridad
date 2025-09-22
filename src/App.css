@@ -7,17 +7,8 @@
 
 /**
  * @description Estilos globales para el cuerpo del documento HTML.
- * Asegura que el body y html ocupen el 100% del viewport para una correcta
- * distribución del diseño flexbox.
+ * El resto de estilos son gestionados por Bootstrap y los componentes.
  */
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   background-color: var(--color-secundario);
   color: var(--color-principal);
