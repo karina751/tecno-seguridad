@@ -1,12 +1,20 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-const ProductCard = ({ producto, onDelete, currentUser }) => {
+const ProductCard = ({ producto, onDelete, onFeature }) => {
+  const { currentUser } = useAuth();
+  
   const nombre = producto?.nombre || "Sin nombre";
   const descripcion = producto?.descripcion || "Sin descripción.";
   const precio = producto?.precio !== undefined ? `$${producto.precio}` : "Precio no disponible";
   const imagenUrl = producto?.imagenUrl || "https://via.placeholder.com/400x200?text=No+Image";
+  const isFeatured = producto?.destacado || false;
+
+  const handleAddToCart = () => {
+    alert(`Producto "${nombre}" agregado al carrito!`);
+  };
 
   return (
     <Card className="h-100 shadow-sm rounded">
@@ -25,31 +33,41 @@ const ProductCard = ({ producto, onDelete, currentUser }) => {
           <Card.Text>
             <strong>{precio}</strong>
           </Card.Text>
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex justify-content-between align-items-center mb-2">
             <Button variant="primary" as={Link} to={`/productos/${producto.id}`}>
               Ver Detalles
             </Button>
-            {/* Solo mostramos los botones si hay un usuario logueado */}
-            {currentUser && (
-              <div className="d-flex">
-                <Button 
-                  as={Link} 
-                  to={`/editar-producto/${producto.id}`} 
-                  variant="warning" 
-                  className="ms-2"
-                >
-                  Editar
-                </Button>
-                <Button 
-                  variant="danger" 
-                  onClick={() => onDelete(producto.id)} 
-                  className="ms-2"
-                >
-                  Eliminar
-                </Button>
-              </div>
-            )}
+            <Button variant="success" onClick={handleAddToCart}>
+              Agregar al Carrito
+            </Button>
           </div>
+          {currentUser && (
+            <div className="d-flex justify-content-center mt-2">
+              <Button 
+                as={Link} 
+                to={`/editar-producto/${producto.id}`} 
+                variant="warning" 
+                className="mx-1"
+              >
+                Editar
+              </Button>
+              <Button 
+                variant="danger" 
+                onClick={() => onDelete(producto.id)} 
+                className="mx-1"
+              >
+                Eliminar
+              </Button>
+              <Button
+                variant={isFeatured ? "info" : "outline-info"}
+                onClick={() => onFeature(producto.id, isFeatured)}
+                className="mx-1"
+                style={{ minWidth: '130px' }} // <-- CAMBIO CLAVE AQUÍ
+              >
+                {isFeatured ? "Quitar Destacado" : "Destacar"}
+              </Button>
+            </div>
+          )}
         </div>
       </Card.Body>
     </Card>

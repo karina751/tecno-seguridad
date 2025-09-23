@@ -1,32 +1,42 @@
 // src/pages/HomePage.jsx
 
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
-import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { Container, Row, Col, Card, Button, Alert } from 'react-bootstrap';
+import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
 import { app } from '../api/firebase';
 import ProductCard from '../components/ProductCard';
 import camarasImg from '../assets/dahua.jpg';
 import pcImg from '../assets/servis pc.jpg';
 import ventaProductosImg from '../assets/logo_venta_equipos1.jpg';
+import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 
 function HomePage() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { currentUser } = useAuth();
 
   useEffect(() => {
-    const fetchProductos = async () => {
+    const fetchProductosDestacados = async () => {
       const db = getFirestore(app);
-      const productosCollection = collection(db, "productos");
-      const productosSnapshot = await getDocs(productosCollection);
-      const productosList = productosSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setProductos(productosList.slice(0, 3));
-      setLoading(false);
+      const productosRef = collection(db, "productos");
+      const q = query(productosRef, where("destacado", "==", true));
+
+      try {
+        const querySnapshot = await getDocs(q);
+        const productosList = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setProductos(productosList);
+      } catch (err) {
+        console.error("Error al cargar los productos destacados:", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchProductos();
+    fetchProductosDestacados();
   }, []);
 
   return (
@@ -74,9 +84,16 @@ function HomePage() {
         </Row>
       </div>
 
-      {/* Carrusel de Productos de la Base de Datos */}
+      {/* Productos Destacados de la Base de Datos */}
       <div className="text-center my-5">
         <h2>Productos Destacados</h2>
+        {currentUser && (
+          <div className="text-center mb-4">
+            <Button as={Link} to="/crear-producto" variant="success">
+              Crear Nuevo Producto
+            </Button>
+          </div>
+        )}
         <Row xs={1} md={2} lg={3} className="g-4">
           {loading ? (
             <div>Cargando productos...</div>
@@ -87,7 +104,7 @@ function HomePage() {
               </Col>
             ))
           ) : (
-            <div>No hay productos disponibles.</div>
+            <Alert variant="info" className="text-center">No hay productos destacados. Inicia sesión y agrega algunos.</Alert>
           )}
         </Row>
       </div>

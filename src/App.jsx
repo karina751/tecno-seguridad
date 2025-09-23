@@ -1,11 +1,15 @@
+// src/App.jsx
+
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import ProductosPage from './pages/ProductosPage';
 import FormularioPage from './pages/FormularioPage';
 import LoginPage from './pages/LoginPage';
 import PrivateRoute from './components/PrivateRoute';
-import Footer from './components/Footer'; // ¡Importamos el componente Footer!
+import ProductoDetallePage from './pages/ProductoDetallePage';
 
 function App() {
   return (
@@ -16,6 +20,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/productos" element={<ProductosPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/productos/:id" element={<ProductoDetallePage />} />
           
           {/* Rutas Protegidas */}
           <Route 
@@ -36,7 +41,7 @@ function App() {
           />
         </Routes>
       </main>
-      <Footer /> {/* ¡Lo agregamos aquí! */}
+      <Footer />
     </>
   );
 }
