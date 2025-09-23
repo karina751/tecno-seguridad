@@ -5,6 +5,9 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { app } from '../api/firebase';
 import ProductCard from '../components/ProductCard';
+import camarasImg from '../assets/dahua.jpg';
+import pcImg from '../assets/servis pc.jpg';
+import ventaProductosImg from '../assets/logo_venta_equipos1.jpg';
 
 function HomePage() {
   const [productos, setProductos] = useState([]);
@@ -19,7 +22,7 @@ function HomePage() {
         id: doc.id,
         ...doc.data()
       }));
-      setProductos(productosList.slice(0, 3)); // Muestra los 3 primeros productos
+      setProductos(productosList.slice(0, 3));
       setLoading(false);
     };
 
@@ -37,7 +40,7 @@ function HomePage() {
         <Row xs={1} md={3} className="g-4">
           <Col>
             <Card>
-              <Card.Img variant="top" src="https://via.placeholder.com/400x200?text=Instalación+de+Cámaras" />
+              <Card.Img variant="top" src={camarasImg} />
               <Card.Body>
                 <Card.Title>Instalación de Cámaras de Seguridad</Card.Title>
                 <Card.Text>
@@ -48,7 +51,7 @@ function HomePage() {
           </Col>
           <Col>
             <Card>
-              <Card.Img variant="top" src="https://via.placeholder.com/400x200?text=Venta+de+Productos" />
+              <Card.Img variant="top" src={ventaProductosImg} />
               <Card.Body>
                 <Card.Title>Venta de Productos Tecnológicos</Card.Title>
                 <Card.Text>
@@ -59,7 +62,7 @@ function HomePage() {
           </Col>
           <Col>
             <Card>
-              <Card.Img variant="top" src="https://via.placeholder.com/400x200?text=Reparación+de+PC" />
+              <Card.Img variant="top" src={pcImg} />
               <Card.Body>
                 <Card.Title>Reparación y Mantenimiento de PC</Card.Title>
                 <Card.Text>

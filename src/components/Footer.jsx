@@ -1,3 +1,6 @@
+// src/components/Footer.jsx
+
+import React from 'react';
 import { Container } from 'react-bootstrap';
 import whatsappLogo from '../assets/logo-whatsapp.jpg'; 
 

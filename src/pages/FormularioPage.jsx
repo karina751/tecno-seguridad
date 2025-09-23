@@ -1,175 +1,155 @@
 // src/pages/FormularioPage.jsx
 
 import { useState, useEffect } from 'react';
-import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router-dom';
-import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../api/firebase';
+import { Container, Form, Button, Alert, ProgressBar } from 'react-bootstrap';
+import { getFirestore, collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { app } from '../api/firebase';
+import { useParams, useNavigate } from 'react-router-dom';
 
-/**
- * @description Componente de página para el formulario de productos.
- * Permite al usuario crear un nuevo producto o editar uno existente.
- */
 function FormularioPage() {
-  const [formData, setFormData] = useState({
-    nombre: '',
-    descripcion: '',
-    precio: '',
-    stock: '',
-  });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const [precio, setPrecio] = useState('');
+  const [imagenUrl, setImagenUrl] = useState('');
+  const [file, setFile] = useState(null); // Nuevo estado para el archivo
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0); // Nuevo estado para el progreso
   const navigate = useNavigate();
-  const { id } = useParams(); // Hook para obtener el ID de la URL
+  const { id } = useParams();
 
-  // useEffect para cargar los datos del producto si se está editando
   useEffect(() => {
     if (id) {
-      const getProductById = async () => {
-        setLoading(true);
-        try {
-          const docRef = doc(db, 'productos', id);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            setFormData(docSnap.data());
-          } else {
-            setError("No se encontró el producto.");
-          }
-        } catch (err) {
-          console.error("Error al obtener el producto:", err);
-          setError("Error al cargar los datos del producto.");
-        } finally {
-          setLoading(false);
+      const fetchProducto = async () => {
+        const db = getFirestore(app);
+        const docRef = doc(db, "productos", id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setNombre(data.nombre);
+          setDescripcion(data.descripcion);
+          setPrecio(data.precio);
+          setImagenUrl(data.imagenUrl);
+        } else {
+          console.log("No such document!");
+          navigate('/productos');
         }
       };
-      getProductById();
+      fetchProducto();
     }
-  }, [id]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  }, [id, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setSuccess('');
     setLoading(true);
 
-    if (!formData.nombre || !formData.descripcion || !formData.precio || !formData.stock) {
-      setError('Por favor, completa todos los campos.');
-      setLoading(false);
-      return;
-    }
-
     try {
-      const productData = {
-        nombre: formData.nombre,
-        descripcion: formData.descripcion,
-        precio: parseFloat(formData.precio),
-        stock: parseInt(formData.stock, 10),
+      let finalImageUrl = imagenUrl;
+
+      // Si el usuario seleccionó un nuevo archivo, lo subimos
+      if (file) {
+        const storage = getStorage(app);
+        const storageRef = ref(storage, `imagenes_productos/${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        await new Promise((resolve, reject) => {
+          uploadTask.on('state_changed',
+            (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              setUploadProgress(progress);
+            },
+            (error) => {
+              console.error("Error al subir la imagen:", error);
+              reject(error);
+            },
+            async () => {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              finalImageUrl = downloadURL;
+              resolve();
+            }
+          );
+        });
+      }
+
+      const db = getFirestore(app);
+      const data = {
+        nombre,
+        descripcion,
+        precio: parseFloat(precio),
+        imagenUrl: finalImageUrl,
+        fecha: new Date(),
       };
 
       if (id) {
-        // Actualizar un producto existente
-        const docRef = doc(db, 'productos', id);
-        await updateDoc(docRef, productData);
-        setSuccess('Producto actualizado con éxito.');
+        await updateDoc(doc(db, "productos", id), data);
       } else {
-        // Crear un nuevo producto
-        const productosRef = collection(db, 'productos');
-        await addDoc(productosRef, { ...productData, creadoEn: new Date() });
-        setSuccess('Producto creado con éxito.');
+        await addDoc(collection(db, "productos"), data);
       }
-
-      setTimeout(() => {
-        navigate('/productos');
-      }, 2000);
+      navigate('/productos');
     } catch (err) {
       console.error("Error al guardar el producto:", err);
-      setError('Error al guardar el producto. Inténtalo de nuevo.');
+      setError('Ocurrió un error al guardar el producto. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
+      setUploadProgress(0);
     }
   };
 
-  const formTitle = id ? "Editar Producto" : "Crear Nuevo Producto";
-  const buttonText = id ? "Actualizar Producto" : "Crear Producto";
-
-  if (loading) {
-    return (
-      <Container className="text-center my-5">
-        <p>Cargando formulario...</p>
-      </Container>
-    );
-  }
-
   return (
     <Container className="my-5">
-      <Row className="justify-content-center">
-        <Col md={8}>
-          <h2 className="text-center mb-4">{formTitle}</h2>
-          {error && <Alert variant="danger">{error}</Alert>}
-          {success && <Alert variant="success">{success}</Alert>}
-          <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Nombre del Producto</Form.Label>
-              <Form.Control
-                type="text"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Descripción</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                name="descripcion"
-                value={formData.descripcion}
-                onChange={handleChange}
-                required
-              />
-            </Form.Group>
-            <Row>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Precio</Form.Label>
-                  <Form.Control
-                    type="number"
-                    name="precio"
-                    value={formData.precio}
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Stock</Form.Label>
-                  <Form.Control
-                    type="number"
-                    name="stock"
-                    value={formData.stock}
-                    onChange={handleChange}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <Button variant="primary" type="submit" className="w-100 mt-3" disabled={loading}>
-              {buttonText}
-            </Button>
-          </Form>
-        </Col>
-      </Row>
+      <h2 className="text-center mb-4">{id ? 'Editar Producto' : 'Crear Producto'}</h2>
+      {error && <Alert variant="danger">{error}</Alert>}
+      <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Label>Nombre</Form.Label>
+          <Form.Control
+            type="text"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Descripción</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={3}
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Precio</Form.Label>
+          <Form.Control
+            type="number"
+            value={precio}
+            onChange={(e) => setPrecio(e.target.value)}
+            required
+          />
+        </Form.Group>
+        
+        {/* Campo de carga de imagen */}
+        <Form.Group className="mb-3">
+          <Form.Label>Imagen del Producto</Form.Label>
+          <Form.Control
+            type="file"
+            onChange={(e) => setFile(e.target.files[0])}
+            disabled={loading}
+          />
+        </Form.Group>
+        
+        {/* Barra de progreso de carga */}
+        {uploadProgress > 0 && uploadProgress < 100 && (
+          <ProgressBar animated now={uploadProgress} label={`${Math.round(uploadProgress)}%`} className="my-3" />
+        )}
+
+        <Button variant="primary" type="submit" className="w-100 mt-3" disabled={loading}>
+          {loading ? 'Guardando...' : id ? 'Actualizar Producto' : 'Crear Producto'}
+        </Button>
+      </Form>
     </Container>
   );
 }
