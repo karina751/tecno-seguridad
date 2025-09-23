@@ -1,8 +1,5 @@
-// src/components/Footer.jsx
-
 import { Container } from 'react-bootstrap';
-// Se corrige el nombre y la extensión del archivo
-import whatsappLogo from '../assets/logo whatsapp.jpg'; 
+import whatsappLogo from '../assets/logo-whatsapp.jpg'; 
 
 function Footer() {
   const numeroTelefono = '387- 155222620';

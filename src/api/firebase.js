@@ -1,5 +1,3 @@
-// src/api/firebase.js
-
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
@@ -19,5 +17,5 @@ const app = initializeApp(firebaseConfig);
 // Inicializa el servicio de Firestore
 const db = getFirestore(app);
 
-// Exporta la instancia de la base de datos
-export { db };
+// Exporta tanto la app como la instancia de la base de datos
+export { app, db };

@@ -54,3 +54,6 @@ body {
   color: #fff !important;
   border-bottom: 2px solid #fff;
 }
+.logo-main {
+  height: 50px; /* or whatever size you want */
+}

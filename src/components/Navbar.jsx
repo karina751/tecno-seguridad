@@ -1,11 +1,26 @@
 // src/components/Navbar.jsx
 
 import { Navbar as NavbarBootstrap, Nav, Container, Form, FormControl, Button } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
-// Se corrige el nombre y la extensión del archivo
-import logo from '../assets/logo-tecnoseguridad.png.png';
+import { NavLink, useNavigate } from 'react-router-dom';
+import logo from '../assets/logo-tecnoseguridad.png';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import { getAuth, signOut } from 'firebase/auth';
 
 function Navbar() {
+  const navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
+
+  const handleLogout = async () => {
+    const auth = getAuth();
+    try {
+      await signOut(auth);
+      navigate('/login');
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
+
   return (
     <NavbarBootstrap className="bg-degradado-ondas" variant="dark" expand="lg">
       <Container fluid>
@@ -24,9 +39,11 @@ function Navbar() {
             <Nav.Link as={NavLink} to="/servicios">
               Servicios
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/crear-producto">
-              Crear Producto
-            </Nav.Link>
+            {currentUser && (
+              <Nav.Link as={NavLink} to="/crear-producto">
+                Crear Producto
+              </Nav.Link>
+            )}
           </Nav>
           <Form className="d-flex">
             <FormControl
@@ -37,6 +54,17 @@ function Navbar() {
             />
             <Button variant="outline-light">Buscar</Button>
           </Form>
+          <Nav>
+            {currentUser ? (
+              <Button variant="danger" onClick={handleLogout}>
+                Cerrar Sesión
+              </Button>
+            ) : (
+              <Nav.Link as={NavLink} to="/login">
+                Iniciar Sesión
+              </Nav.Link>
+            )}
+          </Nav>
         </NavbarBootstrap.Collapse>
       </Container>
     </NavbarBootstrap>
