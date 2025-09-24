@@ -1,5 +1,3 @@
-// src/App.jsx
-
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -10,39 +8,49 @@ import FormularioPage from './pages/FormularioPage';
 import LoginPage from './pages/LoginPage';
 import PrivateRoute from './components/PrivateRoute';
 import ProductoDetallePage from './pages/ProductoDetallePage';
+import CartPage from './pages/CartPage'; 
+import CheckoutPage from './pages/CheckoutPage'; 
+import OrderConfirmationPage from './pages/OrderConfirmationPage'; // <--- Importa la nueva página
+import { AuthProvider } from './context/AuthContext'; 
+import { CartProvider } from './context/CartContext'; 
 
 function App() {
   return (
-    <>
-      <Navbar />
-      <main style={{ minHeight: '80vh' }}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/productos" element={<ProductosPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/productos/:id" element={<ProductoDetallePage />} />
-          
-          {/* Rutas Protegidas */}
-          <Route 
-            path="/crear-producto" 
-            element={
-              <PrivateRoute>
-                <FormularioPage />
-              </PrivateRoute>
-            } 
-          />
-          <Route 
-            path="/editar-producto/:id" 
-            element={
-              <PrivateRoute>
-                <FormularioPage />
-              </PrivateRoute>
-            } 
-          />
-        </Routes>
-      </main>
-      <Footer />
-    </>
+    <AuthProvider>
+      <CartProvider>
+        <Navbar />
+        <main style={{ minHeight: '80vh' }}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/productos" element={<ProductosPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/productos/:id" element={<ProductoDetallePage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/order-confirmation/:orderId" element={<OrderConfirmationPage />} /> {/* <--- Agrega la nueva ruta dinámica */}
+            
+            {/* Rutas Protegidas */}
+            <Route 
+              path="/crear-producto" 
+              element={
+                <PrivateRoute>
+                  <FormularioPage />
+                </PrivateRoute>
+              } 
+            />
+            <Route 
+              path="/editar-producto/:id" 
+              element={
+                <PrivateRoute>
+                  <FormularioPage />
+                </PrivateRoute>
+              } 
+            />
+          </Routes>
+        </main>
+        <Footer />
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

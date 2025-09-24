@@ -1,15 +1,16 @@
-// src/components/Navbar.jsx
-
 import { Navbar as NavbarBootstrap, Nav, Container, Form, FormControl, Button } from 'react-bootstrap';
 import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo-tecnoseguridad.png';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { getAuth, signOut } from 'firebase/auth';
+import { useCart } from '../context/CartContext'; // <-- Importa este hook
 
 function Navbar() {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+  const { cart } = useCart(); // <-- Obtén el carrito del contexto
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); // <-- Suma las cantidades
 
   const handleLogout = async () => {
     const auth = getAuth();
@@ -45,7 +46,7 @@ function Navbar() {
               </Nav.Link>
             )}
           </Nav>
-          <Form className="d-flex">
+          <Form className="d-flex me-4"> {/* Agregué me-4 para un poco de espacio */}
             <FormControl
               type="search"
               placeholder="Buscar"
@@ -54,7 +55,18 @@ function Navbar() {
             />
             <Button variant="outline-light">Buscar</Button>
           </Form>
-          <Nav>
+          <Nav className="d-flex align-items-center"> {/* Nuevo contenedor para alinear */}
+            {/* Nuevo link para el carrito */}
+            <Nav.Link as={NavLink} to="/cart" className="position-relative me-3">
+              <i className="bi bi-cart-fill" style={{ fontSize: '1.5rem', color: 'white' }}></i>
+              {totalItems > 0 && (
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {totalItems}
+                  <span className="visually-hidden">Productos en el carrito</span>
+                </span>
+              )}
+            </Nav.Link>
+
             {currentUser ? (
               <Button variant="danger" onClick={handleLogout}>
                 Cerrar Sesión

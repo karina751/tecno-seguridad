@@ -2,9 +2,11 @@ import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext'; // <-- Importamos el hook del carrito
 
 const ProductCard = ({ producto, onDelete, onFeature }) => {
   const { currentUser } = useAuth();
+  const { addToCart } = useCart(); // <-- Obtenemos la función para agregar al carrito
   
   const nombre = producto?.nombre || "Sin nombre";
   const descripcion = producto?.descripcion || "Sin descripción.";
@@ -13,6 +15,8 @@ const ProductCard = ({ producto, onDelete, onFeature }) => {
   const isFeatured = producto?.destacado || false;
 
   const handleAddToCart = () => {
+    // <-- ¡Aquí está el cambio clave!
+    addToCart(producto);
     alert(`Producto "${nombre}" agregado al carrito!`);
   };
 
@@ -62,7 +66,7 @@ const ProductCard = ({ producto, onDelete, onFeature }) => {
                 variant={isFeatured ? "info" : "outline-info"}
                 onClick={() => onFeature(producto.id, isFeatured)}
                 className="mx-1"
-                style={{ minWidth: '130px' }} // <-- CAMBIO CLAVE AQUÍ
+                style={{ minWidth: '130px' }}
               >
                 {isFeatured ? "Quitar Destacado" : "Destacar"}
               </Button>
