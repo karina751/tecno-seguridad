@@ -1,16 +1,19 @@
+// src/components/Navbar.jsx
+
 import { Navbar as NavbarBootstrap, Nav, Container, Form, FormControl, Button } from 'react-bootstrap';
 import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo-tecnoseguridad.png';
-import { useContext } from 'react';
+import { useContext, useState } from 'react'; // <-- Importa 'useState'
 import { AuthContext } from '../context/AuthContext';
 import { getAuth, signOut } from 'firebase/auth';
-import { useCart } from '../context/CartContext'; // <-- Importa este hook
+import { useCart } from '../context/CartContext'; 
 
 function Navbar() {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
-  const { cart } = useCart(); // <-- Obtén el carrito del contexto
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); // <-- Suma las cantidades
+  const { cart } = useCart();
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const [searchTerm, setSearchTerm] = useState(''); // <-- Nuevo estado para el buscador
 
   const handleLogout = async () => {
     const auth = getAuth();
@@ -19,6 +22,14 @@ function Navbar() {
       navigate('/login');
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
+    }
+  };
+
+  // <-- Nueva función para manejar la búsqueda
+  const handleSearchSubmit = (e) => {
+    e.preventDefault(); // Evita la recarga de la página
+    if (searchTerm.trim()) {
+      navigate(`/productos?search=${searchTerm}`); // Redirige con el término de búsqueda en la URL
     }
   };
 
@@ -46,17 +57,20 @@ function Navbar() {
               </Nav.Link>
             )}
           </Nav>
-          <Form className="d-flex me-4"> {/* Agregué me-4 para un poco de espacio */}
+          <Form className="d-flex" onSubmit={handleSearchSubmit}> {/* <-- Agrega el manejador onSubmit */}
             <FormControl
               type="search"
               placeholder="Buscar"
               className="me-2"
               aria-label="Buscar"
+              value={searchTerm} // <-- Conecta el valor al estado
+              onChange={(e) => setSearchTerm(e.target.value)} // <-- Actualiza el estado
             />
-            <Button variant="outline-light">Buscar</Button>
+            <Button variant="outline-light" type="submit"> {/* <-- Cambia a 'type="submit"' */}
+              Buscar
+            </Button>
           </Form>
-          <Nav className="d-flex align-items-center"> {/* Nuevo contenedor para alinear */}
-            {/* Nuevo link para el carrito */}
+          <Nav>
             <Nav.Link as={NavLink} to="/cart" className="position-relative me-3">
               <i className="bi bi-cart-fill" style={{ fontSize: '1.5rem', color: 'white' }}></i>
               {totalItems > 0 && (
@@ -66,7 +80,6 @@ function Navbar() {
                 </span>
               )}
             </Nav.Link>
-
             {currentUser ? (
               <Button variant="danger" onClick={handleLogout}>
                 Cerrar Sesión
