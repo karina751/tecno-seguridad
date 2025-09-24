@@ -1,3 +1,5 @@
+// src/App.jsx
+
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -10,7 +12,9 @@ import PrivateRoute from './components/PrivateRoute';
 import ProductoDetallePage from './pages/ProductoDetallePage';
 import CartPage from './pages/CartPage'; 
 import CheckoutPage from './pages/CheckoutPage'; 
-import OrderConfirmationPage from './pages/OrderConfirmationPage'; // <--- Importa la nueva página
+import OrderConfirmationPage from './pages/OrderConfirmationPage'; 
+import ServiciosPage from './pages/ServiciosPage'; 
+import ContactPage from './pages/ContactPage'; // <-- ¡Importa la nueva página de Contacto!
 import { AuthProvider } from './context/AuthContext'; 
 import { CartProvider } from './context/CartContext'; 
 
@@ -27,7 +31,9 @@ function App() {
             <Route path="/productos/:id" element={<ProductoDetallePage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/order-confirmation/:orderId" element={<OrderConfirmationPage />} /> {/* <--- Agrega la nueva ruta dinámica */}
+            <Route path="/order-confirmation/:orderId" element={<OrderConfirmationPage />} />
+            <Route path="/servicios" element={<ServiciosPage />} />
+            <Route path="/contacto" element={<ContactPage />} /> {/* <-- ¡Agrega la ruta para Contacto! */}
             
             {/* Rutas Protegidas */}
             <Route 
