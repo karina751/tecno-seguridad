@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom'; // <-- Importa 'Link'
+import { useParams, Link } from 'react-router-dom';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { 
-  Container, 
-  Card, 
-  Alert, 
-  Spinner, 
-  ListGroup, 
+import {
+  Container,
+  Card,
+  Alert,
+  Spinner,
+  ListGroup,
   Table,
-  Row, 
+  Row,
   Col,
-  Button // <-- Importa 'Button'
+  Button
 } from 'react-bootstrap';
 import { app } from '../api/firebase';
 
@@ -46,6 +46,34 @@ function OrderConfirmationPage() {
     fetchOrder();
   }, [orderId]);
 
+  // Función para generar el mensaje de WhatsApp
+  const generateWhatsAppMessage = () => {
+    if (!order) return '';
+    
+    // Extrae la información del comprador y los productos
+    const { buyer, items, total } = order;
+    
+    // Crea el encabezado del mensaje
+    let message = `¡Hola TecnoSeguridad! Acabo de realizar un pedido.\n`;
+    message += `*ID del pedido:* ${order.id}\n`;
+    message += `*Nombre:* ${buyer.name}\n`;
+    message += `*Email:* ${buyer.email}\n`;
+    message += `*Teléfono:* ${buyer.phone}\n`;
+    message += `*Dirección:* ${buyer.address}\n\n`;
+    
+    // Lista los productos
+    message += `*Productos:*\n`;
+    items.forEach((item) => {
+      message += `• ${item.nombre} (x${item.quantity}) - $${(item.precio * item.quantity).toFixed(2)}\n`;
+    });
+    
+    // Añade el total
+    message += `\n*Total del Pedido:* $${total.toFixed(2)}`;
+    
+    // Codifica el mensaje para la URL
+    return encodeURIComponent(message);
+  };
+
   if (loading) {
     return (
       <Container className="my-5 text-center">
@@ -73,15 +101,20 @@ function OrderConfirmationPage() {
     );
   }
 
+  // Define el número de WhatsApp aquí
+  const numeroWhatsApp = '3875222620'; // Usé el número que me pasaste en el footer
+  const mensajeWhatsApp = generateWhatsAppMessage();
+  const linkWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${mensajeWhatsApp}`;
+
   return (
     <Container className="my-5">
       <Card className="shadow-sm p-4">
-        <h2 className="text-center mb-4 text-success">¡Compra Realizada con Éxito!</h2>
+        <h2 className="text-center mb-4 text-success">¡Pedido Realizado con Éxito!</h2>
         <Alert variant="success" className="text-center">
           <h4 className="alert-heading">Gracias por tu compra.</h4>
-          <p>Tu pedido ha sido procesado correctamente y pronto nos pondremos en contacto contigo.</p>
+          <p>Tu pedido ha sido procesado correctamente .</p>
         </Alert>
-        
+
         <div className="text-center my-4">
           <h5>ID de Pedido: <span className="fw-bold">{order.id}</span></h5>
         </div>
@@ -137,11 +170,10 @@ function OrderConfirmationPage() {
             <h4 className="text-end mt-3">Total: <span className="text-success fw-bold">${order.total.toFixed(2)}</span></h4>
           </Card.Body>
         </Card>
-        
-        {/* El nuevo botón de "Volver al inicio" */}
+
         <div className="text-center mt-4">
-          <Button variant="primary" as={Link} to="/">
-            Volver al Inicio
+          <Button variant="success" href={linkWhatsApp} target="_blank" rel="noopener noreferrer">
+            Enviar Detalles por WhatsApp
           </Button>
         </div>
       </Card>
