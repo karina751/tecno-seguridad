@@ -13,28 +13,39 @@ function ProductCard({ producto, onDelete, onFeature }) {
   const esDestacado = producto.destacado;
 
   return (
-    <Card className="h-100 shadow-sm position-relative"> {/* Añadido position-relative */}
-      
-      {/* Ícono de estrella para destacar - Posicionado arriba a la derecha */}
+    <Card className="h-100 shadow-sm position-relative">
       {currentUser && (
         <span
           onClick={() => onFeature(producto.id, esDestacado)}
           style={{ 
             cursor: 'pointer', 
             color: '#ffc107', 
-            fontSize: '1.8rem', // Tamaño ligeramente más grande para la estrella
-            position: 'absolute', // Posición absoluta
-            top: '10px',        // 10px desde arriba
-            right: '10px',      // 10px desde la derecha
-            zIndex: 1          // Para asegurar que esté por encima de la imagen
+            fontSize: '1.8rem',
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            zIndex: 1
           }}
-          className="bg-white rounded-circle p-1 shadow-sm" // Fondo blanco y sombra para resaltar
+          className="bg-white rounded-circle p-1 shadow-sm"
         >
           {esDestacado ? <FaStar /> : <FaRegStar />}
         </span>
       )}
 
-      <Card.Img variant="top" src={producto.imagenUrl} style={{ height: '200px', objectFit: 'cover' }} />
+      {/* AQUÍ ESTÁ EL CAMBIO IMPORTANTE: */}
+      <div style={{ height: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#f8f9fa' }}>
+        <Card.Img 
+          variant="top" 
+          src={producto.imagenUrl} 
+          style={{ 
+            maxHeight: '100%',  // La imagen no excederá la altura de su div contenedor
+            maxWidth: '100%',   // La imagen no excederá el ancho de su div contenedor
+            objectFit: 'contain' // Se ajusta al contenedor sin cortarse
+          }} 
+        />
+      </div>
+      {/* FIN DEL CAMBIO */}
+
       <Card.Body className="d-flex flex-column">
         <Card.Title className="fw-bold text-center mb-2">{producto.nombre}</Card.Title>
         <Card.Text className="text-center text-muted flex-grow-1" style={{ fontSize: '0.9rem' }}>
@@ -44,7 +55,6 @@ function ProductCard({ producto, onDelete, onFeature }) {
           ${producto.precio.toFixed(2)}
         </Card.Text>
         
-        {/* Botones de acción principales */}
         <div className="d-flex justify-content-center mt-auto">
           <Button variant="outline-primary" as={Link} to={`/productos/${producto.id}`} className="flex-fill me-2">
             Ver más
@@ -54,7 +64,6 @@ function ProductCard({ producto, onDelete, onFeature }) {
           </Button>
         </div>
 
-        {/* Opciones de administrador - Solo para usuarios autenticados */}
         {currentUser && (
           <div className="mt-3 d-flex justify-content-between">
             <Button variant="warning" size="sm" as={Link} to={`/editar-producto/${producto.id}`} className="flex-fill me-2">
