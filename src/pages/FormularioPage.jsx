@@ -1,5 +1,3 @@
-// src/pages/FormularioPage.jsx
-
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button, Alert, ProgressBar, Spinner } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
@@ -10,11 +8,22 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/
 import { app } from '../api/firebase';
 import { useParams, useNavigate } from 'react-router-dom';
 
-// Esquema de validación con Yup
+// ESQUEMA DE VALIDACIÓN CON YUP (MODIFICADO)
 const schema = yup.object().shape({
   nombre: yup.string().required('El nombre es obligatorio'),
   descripcion: yup.string().required('La descripción es obligatoria'),
-  precio: yup.number().typeError('El precio debe ser un número').required('El precio es obligatorio').positive('El precio debe ser un número positivo'),
+  precio: yup.number()
+    .typeError('El precio debe ser un número')
+    .required('El precio es obligatorio')
+    .positive('El precio debe ser un número positivo'),
+  
+  // AÑADIDO: Validación del nuevo campo 'stock'
+  stock: yup.number()
+    .typeError('El stock debe ser un número entero')
+    .required('El stock inicial es obligatorio')
+    .integer('El stock debe ser un número entero')
+    .min(0, 'El stock no puede ser negativo'),
+
   imagenUrl: yup.string().url('Debe ser una URL válida').notRequired(),
 });
 
@@ -28,8 +37,17 @@ function FormularioPage() {
 
   const isEditing = !!id;
 
+  // Modificamos la configuración de useForm para incluir el valor por defecto del stock
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(schema),
+    // Establecemos valores por defecto para evitar NaN/errores, incluyendo el nuevo campo 'stock'
+    defaultValues: {
+      nombre: '',
+      descripcion: '',
+      precio: 0,
+      stock: 0, // Valor inicial para el stock
+      imagenUrl: '',
+    }
   });
 
   useEffect(() => {
@@ -40,8 +58,12 @@ function FormularioPage() {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const data = docSnap.data();
-          reset(data);
-          // OJO: No necesitas setFile aquí, solo la URL se guarda en el formulario.
+          // Aseguramos que los valores numéricos se carguen correctamente
+          reset({
+            ...data,
+            precio: data.precio || 0,
+            stock: data.stock || 0, // Aseguramos que el stock se cargue
+          });
         } else {
           console.log("No such document!");
           navigate('/productos');
@@ -86,10 +108,13 @@ function FormularioPage() {
       }
 
       const db = getFirestore(app);
+      
+      // FUNCIÓN ON SUBMIT (MODIFICADA): Incluimos el nuevo campo 'stock'
       const productData = {
         nombre: data.nombre,
         descripcion: data.descripcion,
-        precio: parseFloat(data.precio),
+        precio: data.precio,
+        stock: data.stock, // GUARDAMOS EL NUEVO CAMPO 'stock'
         imagenUrl: finalImageUrl,
         fecha: new Date(),
       };
@@ -131,6 +156,19 @@ function FormularioPage() {
           <Form.Control type="number" step="0.01" {...register('precio')} />
           {errors.precio && <p className="text-danger">{errors.precio.message}</p>}
         </Form.Group>
+        
+        {/* NUEVO CAMPO STOCK INICIAL */}
+        <Form.Group className="mb-3">
+          <Form.Label>Stock Inicial</Form.Label>
+          <Form.Control 
+            type="number" 
+            {...register('stock')} // Conecta con React Hook Form
+            min="0" // Permite que el navegador valide la entrada mínima
+            placeholder="Ej: 10"
+          />
+          {errors.stock && <p className="text-danger">{errors.stock.message}</p>}
+        </Form.Group>
+        {/* FIN DEL NUEVO CAMPO */}
 
         <Form.Group className="mb-3">
           <Form.Label>Imagen del Producto</Form.Label>
