@@ -32,20 +32,18 @@ function ProductCard({ producto, onDelete, onFeature }) {
         </span>
       )}
 
-      {/* AQUÍ ESTÁ EL CAMBIO IMPORTANTE: */}
       <div style={{ height: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#f8f9fa' }}>
         <Card.Img 
           variant="top" 
           src={producto.imagenUrl} 
           style={{ 
-            maxHeight: '100%',  // La imagen no excederá la altura de su div contenedor
-            maxWidth: '100%',   // La imagen no excederá el ancho de su div contenedor
-            objectFit: 'contain' // Se ajusta al contenedor sin cortarse
+            maxHeight: '100%',  
+            maxWidth: '100%',   
+            objectFit: 'contain' 
           }} 
         />
       </div>
-      {/* FIN DEL CAMBIO */}
-
+      
       <Card.Body className="d-flex flex-column">
         <Card.Title className="fw-bold text-center mb-2">{producto.nombre}</Card.Title>
         <Card.Text className="text-center text-muted flex-grow-1" style={{ fontSize: '0.9rem' }}>

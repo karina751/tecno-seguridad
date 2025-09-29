@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import { useForm, ValidationError } from '@formspree/react';
-import { Link } from 'react-router-dom'; // <-- ¡Importa 'Link'!
+import { Link } from 'react-router-dom'; 
 
 function ContactPage() {
   const [state, handleSubmit] = useForm("xwprkggb");
@@ -80,7 +80,6 @@ function ContactPage() {
               </Button>
             </Form>
 
-            {/* Nuevo botón para volver al inicio */}
             <div className="text-center mt-3">
                 <Button variant="outline-secondary" as={Link} to="/">
                     Volver al Inicio

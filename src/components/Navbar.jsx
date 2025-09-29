@@ -2,8 +2,7 @@
 
 import { Navbar as NavbarBootstrap, Nav, Container, Form, FormControl, Button } from 'react-bootstrap';
 import { NavLink, useNavigate } from 'react-router-dom';
-// Asegúrate de que el nombre del archivo aquí coincida con el que guardaste
-import logoNuevo from '../assets/logo-nuevo.png'; // <-- ¡Importación corregida!
+import logoNuevo from '../assets/logo-nuevo.png'; 
 import { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { getAuth, signOut } from 'firebase/auth';
@@ -38,10 +37,10 @@ function Navbar() {
       <Container fluid>
         <NavbarBootstrap.Brand as={NavLink} to="/">
           <img 
-            src={logoNuevo} // <-- ¡Variable del nuevo logo!
+            src={logoNuevo} 
             alt="TecnoSeguridad Logo" 
             className="logo-main me-2" 
-            style={{height: '40px'}} // Ajusta la altura si es necesario
+            style={{height: '40px'}}
           />
         </NavbarBootstrap.Brand>
         <NavbarBootstrap.Toggle aria-controls="navbarTogglerDemo03" />

@@ -1,7 +1,7 @@
 // src/pages/ProductosPage.jsx
 
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom'; // <-- Importa este hook
+import { useSearchParams } from 'react-router-dom'; 
 import { Container, Row, Col, Spinner, Alert, Form } from 'react-bootstrap';
 import ProductCard from '../components/ProductCard';
 import { getFirestore, collection, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
@@ -10,8 +10,8 @@ import { app } from '../api/firebase';
 function ProductosPage() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchParams, setSearchParams] = useSearchParams(); // <-- Obtén los parámetros de la URL
-  const searchTerm = searchParams.get('search') || ''; // <-- Lee el término de búsqueda
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchTerm = searchParams.get('search') || '';
   const [selectedCategory, setSelectedCategory] = useState('Todos');
 
   useEffect(() => {
@@ -72,9 +72,8 @@ function ProductosPage() {
               <Form.Control
                 type="text"
                 placeholder="Buscar productos por nombre..."
-                value={searchTerm} // <-- Usa el valor de la URL
+                value={searchTerm}
                 onChange={(e) => {
-                  // Actualiza la URL para reflejar la búsqueda
                   setSearchParams({ search: e.target.value });
                 }}
               />

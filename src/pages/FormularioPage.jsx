@@ -8,7 +8,7 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/
 import { app } from '../api/firebase';
 import { useParams, useNavigate } from 'react-router-dom';
 
-// ESQUEMA DE VALIDACIÓN CON YUP (MODIFICADO)
+// ESQUEMA DE VALIDACIÓN CON YUP 
 const schema = yup.object().shape({
   nombre: yup.string().required('El nombre es obligatorio'),
   descripcion: yup.string().required('La descripción es obligatoria'),
@@ -17,7 +17,7 @@ const schema = yup.object().shape({
     .required('El precio es obligatorio')
     .positive('El precio debe ser un número positivo'),
   
-  // AÑADIDO: Validación del nuevo campo 'stock'
+  
   stock: yup.number()
     .typeError('El stock debe ser un número entero')
     .required('El stock inicial es obligatorio')
@@ -37,15 +37,15 @@ function FormularioPage() {
 
   const isEditing = !!id;
 
-  // Modificamos la configuración de useForm para incluir el valor por defecto del stock
+  // Modifique la configuración de useForm para incluir el valor por defecto del stock
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(schema),
-    // Establecemos valores por defecto para evitar NaN/errores, incluyendo el nuevo campo 'stock'
+    
     defaultValues: {
       nombre: '',
       descripcion: '',
       precio: 0,
-      stock: 0, // Valor inicial para el stock
+      stock: 0, 
       imagenUrl: '',
     }
   });
@@ -58,11 +58,11 @@ function FormularioPage() {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const data = docSnap.data();
-          // Aseguramos que los valores numéricos se carguen correctamente
+          
           reset({
             ...data,
             precio: data.precio || 0,
-            stock: data.stock || 0, // Aseguramos que el stock se cargue
+            stock: data.stock || 0, 
           });
         } else {
           console.log("No such document!");
@@ -108,13 +108,12 @@ function FormularioPage() {
       }
 
       const db = getFirestore(app);
-      
-      // FUNCIÓN ON SUBMIT (MODIFICADA): Incluimos el nuevo campo 'stock'
+            
       const productData = {
         nombre: data.nombre,
         descripcion: data.descripcion,
         precio: data.precio,
-        stock: data.stock, // GUARDAMOS EL NUEVO CAMPO 'stock'
+        stock: data.stock, 
         imagenUrl: finalImageUrl,
         fecha: new Date(),
       };
@@ -157,8 +156,7 @@ function FormularioPage() {
           {errors.precio && <p className="text-danger">{errors.precio.message}</p>}
         </Form.Group>
         
-        {/* NUEVO CAMPO STOCK INICIAL */}
-        <Form.Group className="mb-3">
+          <Form.Group className="mb-3">
           <Form.Label>Stock Inicial</Form.Label>
           <Form.Control 
             type="number" 
@@ -168,8 +166,7 @@ function FormularioPage() {
           />
           {errors.stock && <p className="text-danger">{errors.stock.message}</p>}
         </Form.Group>
-        {/* FIN DEL NUEVO CAMPO */}
-
+        
         <Form.Group className="mb-3">
           <Form.Label>Imagen del Producto</Form.Label>
           <Form.Control type="file" onChange={handleFileChange} disabled={loading} />

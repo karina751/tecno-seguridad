@@ -68,7 +68,7 @@ function CheckoutPage() {
     try {
       const docRef = await addDoc(ordersCollection, order);
       clearCart();
-      navigate(`/order-confirmation/${docRef.id}`); // <--- ¡Cambio clave aquí!
+      navigate(`/order-confirmation/${docRef.id}`); 
     } catch (error) {
       console.error("Error al crear la orden:", error);
       alert("Hubo un error al procesar tu pedido. Inténtalo de nuevo.");

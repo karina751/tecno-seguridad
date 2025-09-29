@@ -54,14 +54,14 @@ function HomePage() {
                 <Card.Img 
                   variant="top" 
                   src={camarasImg} 
-                  style={{ height: '200px', objectFit: 'contain', backgroundColor: '#f8f9fa' }} // <-- Cambiado a 'contain' y añadido fondo
+                  style={{ height: '200px', objectFit: 'contain', backgroundColor: '#f8f9fa' }}
                 />
                 <Card.Body className="d-flex flex-column">
                   <Card.Title>Instalación de Cámaras de Seguridad</Card.Title>
                   <Card.Text className="flex-grow-1">
                     Sistemas de vigilancia de alta tecnología para proteger tu hogar o negocio.
                   </Card.Text>
-                  {/* Puedes añadir un botón o un enlace aquí si lo deseas */}
+                  
                 </Card.Body>
               </Card>
             </Col>
@@ -70,14 +70,14 @@ function HomePage() {
                 <Card.Img 
                   variant="top" 
                   src={ventaProductosImg} 
-                  style={{ height: '200px', objectFit: 'contain', backgroundColor: '#f8f9fa' }} // <-- Cambiado a 'contain' y añadido fondo
+                  style={{ height: '200px', objectFit: 'contain', backgroundColor: '#f8f9fa' }} 
                 />
                 <Card.Body className="d-flex flex-column">
                   <Card.Title>Venta de Productos Tecnológicos</Card.Title>
                   <Card.Text className="flex-grow-1">
                     Encuentra notebooks, componentes y accesorios de las mejores marcas.
                   </Card.Text>
-                  {/* Puedes añadir un botón o un enlace aquí si lo deseas */}
+                  
                 </Card.Body>
               </Card>
             </Col>
@@ -86,21 +86,21 @@ function HomePage() {
                 <Card.Img 
                   variant="top" 
                   src={pcImg} 
-                  style={{ height: '200px', objectFit: 'contain', backgroundColor: '#f8f9fa' }} // <-- Cambiado a 'contain' y añadido fondo
+                  style={{ height: '200px', objectFit: 'contain', backgroundColor: '#f8f9fa' }}
                 />
                 <Card.Body className="d-flex flex-column">
                   <Card.Title>Reparación y Mantenimiento de PC</Card.Title>
                   <Card.Text className="flex-grow-1">
                     Servicio técnico profesional para que tus equipos funcionen como nuevos.
                   </Card.Text>
-                  {/* Puedes añadir un botón o un enlace aquí si lo deseas */}
+                  
                 </Card.Body>
               </Card>
             </Col>
           </Row>
         </div>
 
-        {/* Sección de Productos Destacados con Carrusel */}
+        
         <div className="text-center my-5">
           <h2>Productos Destacados</h2>
           {loading ? (

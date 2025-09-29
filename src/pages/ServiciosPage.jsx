@@ -3,7 +3,7 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { FaVideo, FaShieldAlt, FaLock, FaWifi, FaLaptopCode, FaBug, FaCamera } from 'react-icons/fa'; // <-- cambié FaCctvCamera por FaCamera
+import { FaVideo, FaShieldAlt, FaLock, FaWifi, FaLaptopCode, FaBug, FaCamera } from 'react-icons/fa'; 
 
 function ServiciosPage() {
   const servicios = [
@@ -40,7 +40,7 @@ function ServiciosPage() {
     {
       titulo: "Configuración de Cámaras",
       descripcion: "Configuramos cámaras de seguridad existentes y las integramos a redes, móviles y sistemas de monitoreo para un acceso sencillo.",
-      icono: <FaCamera size={50} className="text-primary mb-3" /> // <-- cambiado a FaCamera
+      icono: <FaCamera size={50} className="text-primary mb-3" />
     }
   ];
 

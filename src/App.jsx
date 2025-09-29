@@ -14,7 +14,7 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage'; 
 import OrderConfirmationPage from './pages/OrderConfirmationPage'; 
 import ServiciosPage from './pages/ServiciosPage'; 
-import ContactPage from './pages/ContactPage'; // <-- ¡Importa la nueva página de Contacto!
+import ContactPage from './pages/ContactPage';
 import { AuthProvider } from './context/AuthContext'; 
 import { CartProvider } from './context/CartContext'; 
 
@@ -33,7 +33,7 @@ function App() {
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/order-confirmation/:orderId" element={<OrderConfirmationPage />} />
             <Route path="/servicios" element={<ServiciosPage />} />
-            <Route path="/contacto" element={<ContactPage />} /> {/* <-- ¡Agrega la ruta para Contacto! */}
+            <Route path="/contacto" element={<ContactPage />} />
             
             {/* Rutas Protegidas */}
             <Route 

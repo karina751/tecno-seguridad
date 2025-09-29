@@ -46,7 +46,6 @@ function OrderConfirmationPage() {
     fetchOrder();
   }, [orderId]);
 
-  // Función para generar el mensaje de WhatsApp
   const generateWhatsAppMessage = () => {
     if (!order) return '';
     
@@ -101,8 +100,7 @@ function OrderConfirmationPage() {
     );
   }
 
-  // Define el número de WhatsApp aquí
-  const numeroWhatsApp = '3875222620'; // Usé el número que me pasaste en el footer
+  const numeroWhatsApp = '3875222620';
   const mensajeWhatsApp = generateWhatsAppMessage();
   const linkWhatsApp = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${mensajeWhatsApp}`;
 

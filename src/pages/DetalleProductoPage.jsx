@@ -1,9 +1,8 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 
-/**
- * @description Componente para mostrar el detalle de un producto específico.
- */
+// Componente para mostrar el detalle de un producto específico.
+
 function DetalleProductoPage() {
   return (
     <Container className="my-5">

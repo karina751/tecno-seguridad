@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom';
 
 function Destacados({ productos }) {
   if (productos.length === 0) {
-    return null; // No renderizar si no hay productos
+    return null; 
   }
 
-  // Agrupar productos de a 3 para el carrusel
+  // Agrupa productos de a 3 para el carrusel
   const groupedProducts = [];
   for (let i = 0; i < productos.length; i += 3) {
     groupedProducts.push(productos.slice(i, i + 3));
