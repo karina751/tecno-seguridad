@@ -86,3 +86,11 @@ El proyecto está diseñado para ser desplegado fácilmente en plataformas como 
 3.  **Configura las variables de entorno** en la plataforma de despliegue, asegurándote de que los nombres y valores coincidan con los de tu archivo `.env.local`.
 
 Cada vez que subas cambios a la rama principal (`main`), Vercel detectará la actualización y desplegará una nueva versión de tu sitio automáticamente.
+
+Actualizacion de imagenes
+
+Reglas de Firestore permanentes: Al publicar las reglas basadas en autenticación (allow read: if true; para que cualquiera vea los productos y allow write: if request.auth != null; para que solo vos edites/crees), eliminaste la fecha de vencimiento temporal de 30 días que tenía el modo de prueba.
+
+Sin dependencia de Firebase Storage: Al no subir archivos físicos a Storage sino utilizar URLs de imágenes públicas (de internet, Imgur, etc.), tu proyecto nunca superará los límites ni la cuota del plan gratuito (Spark).
+
+Despliegue automático en Vercel: Cada vez que hagas un cambio en tu código y lo subas a GitHub, Vercel actualizará tu sitio tecno-seguridad.vercel.app sin que tengas que tocar nada más.
